@@ -3,6 +3,7 @@ import { mount } from "enzyme";
 import * as React from "react";
 import * as sinon from "sinon";
 import { setStateCallback } from "../src/index";
+import { tick } from "./async";
 
 type HookType<T> = [T | undefined, React.Dispatch<React.SetStateAction<T | undefined>>];
 
@@ -19,7 +20,7 @@ describe("The setStateCallback hook", (): void => {
     sinon.restore();
   });
 
-  it("Should return hook if no initial variables provided", (): void => {
+  it("Should return hook if no initial variables provided", async (): Promise<void> => {
     const callback = sinon.spy();
     const wrapper = mount(<HookWrapper hook={() => setStateCallback()} />);
 
@@ -33,7 +34,7 @@ describe("The setStateCallback hook", (): void => {
     expect(setValue).to.be.a("function");
   });
 
-  it("Should return array type with two values", (): void => {
+  it("Should return array type with two values", async (): Promise<void> => {
     const callback = sinon.spy();
     const wrapper = mount(<HookWrapper hook={() => setStateCallback(5, callback)} />);
 
@@ -47,7 +48,7 @@ describe("The setStateCallback hook", (): void => {
     expect(setValue).to.be.a("function");
   });
 
-  it("Should not invoke state change callback from initial state", (): void => {
+  it("Should not invoke state change callback from initial state", async (): Promise<void> => {
     const callback = sinon.spy();
     const wrapper = mount(<HookWrapper hook={() => setStateCallback(5, callback)} />);
 
@@ -72,7 +73,7 @@ describe("The setStateCallback hook", (): void => {
 
     setValue(10);
 
-    await new Promise(r => setTimeout(r, 10));
+    await tick();
 
     ({ hook } = wrapper.find(HookDiv).props() as HookDivProps<number>);
     [value, setValue] = hook;
@@ -83,7 +84,7 @@ describe("The setStateCallback hook", (): void => {
   });
 
   /*
-  it("Should invoke state change callback for state changes after initial state", (): void => {
+  it("Should invoke state change callback for state changes after initial state", async (): Promise<void> => {
     const callbackSpy = sinon.spy();
     const wrapper = mount(<HookTest value={5} onClick={() => 5} onChange={callbackSpy} />);
 
