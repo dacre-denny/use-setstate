@@ -1,3 +1,7 @@
+export type TypedFunction<A, R> = (arg: A) => R;
+
+export type FunctionOrValue<T> = T | (() => T);
+
 /**
  * Returns true if type of value is function
  *

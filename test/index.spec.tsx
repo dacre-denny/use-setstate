@@ -1,9 +1,10 @@
 import { expect } from "chai";
-import { mount, ReactWrapper } from "enzyme";
+import { mount } from "enzyme";
 import * as React from "react";
 import * as sinon from "sinon";
 import { useSetState } from "../src/index";
-import { tick, tickUpdate } from "./async";
+import { tickUpdate } from "./async";
+import { TypedFunction } from "../src/helpers";
 
 type HookType<T> = [T | undefined, React.Dispatch<React.SetStateAction<T | undefined>>];
 
@@ -13,7 +14,7 @@ interface HookDivProps<T> {
 
 const HookDiv = <T extends any>(_: HookDivProps<T>) => <div />;
 
-const HookWrapper = <T extends any>(props: { hook: () => HookType<T> }) => <HookDiv hook={props.hook ? props.hook() : undefined} />;
+const HookWrapper = <T extends any>(props: { hook: TypedFunction<void, HookType<T>> }) => <HookDiv hook={props.hook ? props.hook() : undefined} />;
 
 const validateHook = <T extends any>(hook: HookType<T>, initialValue: T) => {
   expect(hook).to.be.a("array");
