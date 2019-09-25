@@ -1,8 +1,8 @@
 import * as React from "react";
 
 export const setStateCallback = <T extends any>(
-  initial: T,
-  callback: (state: T) => void
+  initial?: T,
+  callback?: (state: T) => void
 ): [T | undefined, React.Dispatch<React.SetStateAction<T | undefined>>] => {
   const hasRun = React.useRef(false);
   const [state, setState] = React.useState<T>(initial);
