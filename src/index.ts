@@ -1,19 +1,29 @@
 import * as React from "react";
+import { isFunction } from "./helpers";
 
-export const setStateCallback = <T extends any>(
-  initial?: T,
+export const useSetState = <T extends any>(
+  initial?: T | (() => T),
   callback?: (state: T) => void
 ): [T | undefined, React.Dispatch<React.SetStateAction<T | undefined>>] => {
-  const hasRun = React.useRef(false);
   const [state, setState] = React.useState<T>(initial);
 
-  React.useEffect(() => {
-    if (hasRun.current) {
-      callback(state);
+  if (callback !== undefined) {
+    const hasRun = React.useRef(false);
+    if (isFunction(callback)) {
+      React.useEffect(() => {
+        if (hasRun.current) {
+          callback(state);
+        } else {
+          hasRun.current = true;
+        }
+      }, [state]);
     } else {
-      hasRun.current = true;
+      if (hasRun.current === false) {
+        console.warn(`useSetState: function type for callback argument expected. Found callback of type "${typeof callback}"`);
+        hasRun.current = true;
+      }
     }
-  }, [state]);
+  }
 
   return [state, setState];
 };
