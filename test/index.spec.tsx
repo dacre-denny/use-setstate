@@ -74,7 +74,7 @@ describe("The setStateCallback hook", async (): Promise<void> => {
     const wrapper = mount(<HookWrapper hook={(): HookType<string> => useSetState(() => "bar")} />);
 
     let { hook } = wrapper.find(HookDiv).props() as HookDivProps<string>;
-    let [, setValue] = hook;
+    const [, setValue] = hook;
 
     validateHook(hook, "bar");
     expect(warn.called).to.be.false;

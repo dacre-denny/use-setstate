@@ -11,9 +11,7 @@
   <a href="https://www.npmjs.com/package/react-usesetstate">
     <img src="https://img.shields.io/npm/dm/react-usesetstate" alt="Downloads">
   </a>
-  <!--
-  <a href="https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dacre-denny/react-usesetstate&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/ddc6850a2f2b4f94a621ab40ce22e557"/></a>
-  -->
+  <a href="https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dacre-denny/use-setstate&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/295187f20b074fd9b63040c3538e006a"/></a>
 </p>
 
 ---
