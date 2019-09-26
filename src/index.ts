@@ -1,5 +1,5 @@
 import * as React from "react";
-import { isFunction, TypedFunction, FunctionOrValue } from "./helpers";
+import { isFunction, TypedFunction, FunctionOrValue, TypedValue, HookType } from "./helpers";
 
 /**
  * The useSetState melds the useState hook with the state change callback that is provided by the setState method of class based components.
@@ -7,10 +7,10 @@ import { isFunction, TypedFunction, FunctionOrValue } from "./helpers";
  * @param initial
  * @param callback
  */
-export const useSetState = <T extends any>(
+export const useSetState = <T extends TypedValue>(
   initial?: FunctionOrValue<T>,
   callback?: TypedFunction<T, void>
-): [T | undefined, React.Dispatch<React.SetStateAction<T | undefined>>] => {
+): HookType<T> => {
   const [state, setState] = React.useState<T>(initial);
 
   if (callback !== undefined) {
@@ -25,7 +25,9 @@ export const useSetState = <T extends any>(
         }
       }, [state]);
     } else if (!hasRun.current) {
-      console.warn(`useSetState: function type for callback argument expected. Found callback of type "${typeof callback}"`);
+      console.warn(
+        `useSetState: function type for callback argument expected. Found callback of type "${typeof callback}"`
+      );
       hasRun.current = true;
     }
   }

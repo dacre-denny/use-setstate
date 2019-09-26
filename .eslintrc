@@ -15,6 +15,7 @@
     "indent": 0,
     "react/jsx-key": 0,
     "trailing-comma": 0,
+    "no-magic-numbers": ["error", { "ignore": [5, 10, 15] }],
     "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/explicit-function-return-type": ["error"]
   },
