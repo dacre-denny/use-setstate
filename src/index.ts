@@ -7,17 +7,14 @@ import { isFunction, TypedFunction, FunctionOrValue, TypedValue, HookType } from
  * @param initial
  * @param callback
  */
-export const useSetState = <T extends TypedValue>(
-  initial?: FunctionOrValue<T>,
-  callback?: TypedFunction<T, void>
-): HookType<T> => {
+export const useSetState = <T extends TypedValue>(initial?: FunctionOrValue<T>, callback?: TypedFunction<T, void>): HookType<T> => {
   const [state, setState] = React.useState<T>(initial);
 
   if (callback !== undefined) {
     const hasRun = React.useRef(false);
 
     if (isFunction(callback)) {
-      React.useEffect(() => {
+      React.useEffect((): void => {
         if (hasRun.current) {
           callback(state);
         } else {
@@ -25,9 +22,7 @@ export const useSetState = <T extends TypedValue>(
         }
       }, [state]);
     } else if (!hasRun.current) {
-      console.warn(
-        `useSetState: function type for callback argument expected. Found callback of type "${typeof callback}"`
-      );
+      console.warn(`useSetState: function type for callback argument expected. Found callback of type "${typeof callback}"`);
       hasRun.current = true;
     }
   }

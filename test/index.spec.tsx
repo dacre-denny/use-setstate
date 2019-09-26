@@ -14,9 +14,11 @@ interface HookWrapperProps<T> {
   hookProvider: TypedFunction<void, HookType<T>>;
 }
 
-const HookDiv: React.SFC<HookDivProps<TypedValue>> = () => <div />;
+const HookDiv: React.SFC<HookDivProps<TypedValue>> = (): React.ReactElement => <div />;
 
-const HookWrapper: React.SFC<HookWrapperProps<TypedValue>> = props => <HookDiv hook={props.hookProvider ? props.hookProvider() : undefined} />;
+const HookWrapper: React.SFC<HookWrapperProps<TypedValue>> = (props): React.ReactElement => (
+  <HookDiv hook={props.hookProvider ? props.hookProvider() : undefined} />
+);
 
 const validateHook = <T extends TypedValue>(hook: HookType<T>, initialValue: T): void => {
   expect(hook).to.be.a("array");
@@ -73,7 +75,7 @@ describe("The setStateCallback hook", async (): Promise<void> => {
 
   it("Should return valid hook with state value matching result of initial value callback", async (): Promise<void> => {
     const warn = sinon.stub(console, "warn");
-    const wrapper = mount(<HookWrapper hookProvider={(): HookType<string> => useSetState(() => "bar")} />);
+    const wrapper = mount(<HookWrapper hookProvider={(): HookType<string> => useSetState((): string => "bar")} />);
 
     let { hook } = wrapper.find(HookDiv).props() as HookDivProps<string>;
     const [, setValue] = hook;
