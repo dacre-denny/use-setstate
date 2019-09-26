@@ -31,6 +31,7 @@ const [name, setName] = useSetState("", newName => {
 *   [State change callback](#State-change-callback)
 *   State setter can accept [updater functions](#Setter-function)
 *   Typescript support
+*   Zero dependencies
 
 ## Usage
 
