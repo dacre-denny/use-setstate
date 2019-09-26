@@ -27,10 +27,10 @@ const [name, setName] = useSetState("", newName => {
 
 ## Features
 
-* Interface inspired by [useState](https://reactjs.org/docs/hooks-state.html)
-* [State change callback](#State-change-callback)
-* State setter can accept [updater functions](#Setter-function)
-* Typescript support
+*   Interface inspired by [useState](https://reactjs.org/docs/hooks-state.html)
+*   [State change callback](#State-change-callback)
+*   State setter can accept [updater functions](#Setter-function)
+*   Typescript support
 
 ## Usage
 
