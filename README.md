@@ -1,4 +1,4 @@
-<h1 align="center">use-setstate</h1>
+<h1 align="center">useSetState</h1>
 <p align="center"><i>"when hooks and setState() collide"</i></p>
 
 <p align="center">
