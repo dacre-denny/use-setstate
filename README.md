@@ -5,8 +5,8 @@
   <a href="https://travis-ci.org/dacre-denny/use-setstate">
     <img src="https://travis-ci.org/dacre-denny/use-setstate.svg?branch=master" alt="build">
   </a>
-  <a href="https://coveralls.io/github/dacre-denny/use-setstate?branch=master">
-    <img src="https://coveralls.io/repos/github/dacre-denny/use-setstate/badge.svg?branch=master" alt="Coverage Status">
+  <a href='https://coveralls.io/github/dacre-denny/use-setstate?branch=master'>
+    <img src='https://coveralls.io/repos/github/dacre-denny/use-setstate/badge.svg?branch=master' alt='Coverage Status' />
   </a>
   <a href="https://www.npmjs.com/package/use-setstate">
     <img src="https://img.shields.io/npm/dm/use-setstate" alt="Downloads">
