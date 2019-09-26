@@ -44,11 +44,11 @@ function NameField(props) {
 ## Features
 
 - Interface inspired by [useState](https://reactjs.org/docs/hooks-state.html)
-- State change callback
-- State setter can accept functions [like setState()](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous)
+- [State change callback](#State-change-callback)
+- State setter can accept [updater functions](#Setter-function)
 - Typescript support
 
-## API
+## Usage
 
 The API is similar to Reacts [`useState()`](https://reactjs.org/docs/hooks-state.html) hook. When `useSetState()` is called, an array is returned where the first item of the array is the current state value, and the second item of the array is a setter for that state:
 
@@ -59,15 +59,17 @@ let [value, setValue] = useState(initialValue?);
 let [value, setValue] = useSetState(initialValue?, callback?);
 ```
 
-The main difference is the optional `callback` argument provided by `useSetState()`. This mimics the behavior of the Reacts optional [callback](https://reactjs.org/docs/react-component.html#setstate) for the `setState()` method:
+### State change callback
+
+The main difference between `useState()` and `useSetState()` is the optional `callback` argument. When a `callback` is passed, `useSetState()` will invoke that callback after state changes have been applied to the component, mimicking the behavior of Reacts `setState()` [callback](https://reactjs.org/docs/react-component.html#setstate) argument:
 
 ```jsx
-let [isOpen, setIsOpen] = useSetState(0, () => {
+let [isOpen, setIsOpen] = useSetState(false, () => {
   console.log("open state may have changed..");
 });
 ```
 
-If a state change callback is provided, `useSetState()` will pass the updated state as the first argumentinvoke the callback with the updated state as the first argument:
+When a state change callback is invoked, `useSetState()` will pass the updated state as the first argument:
 
 ```jsx
 let [, setMoney] = useSetState(0, money => {
@@ -77,13 +79,26 @@ let [, setMoney] = useSetState(0, money => {
 });
 ```
 
-### State change callback
+### Setter function
 
-TODO
+The setter function returned by `useSetState()` supports two methods of updating state. The first method is by direct value updates:
 
-### Setter functions
+```jsx
+let [mood, setMood] = useSetState("");
 
-TODO
+setMood("happy");
+
+setMood("sad");
+```
+
+State can also be updated by passing an updater to the setter function, this mimicking the behavior of updaters for Reacts [`setState()`](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous) method:
+
+```jsx
+let [calculatedValue, setCalculatedValue] = useSetState(0);
+
+// Updater function receives prior state value and updates state with returned value
+setCalculatedValue(value => ((value + 2) * 9) / 6);
+```
 
 ## Run tests
 
