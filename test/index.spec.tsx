@@ -30,7 +30,7 @@ const validateHook = <T extends TypedValue>(hook: HookType<T>, initialValue: T):
   expect(setValue).to.be.a("function");
 };
 
-describe("The setStateCallback hook", async (): Promise<void> => {
+describe("The useSetState hook", async (): Promise<void> => {
   afterEach(
     async (): Promise<void> => {
       sinon.restore();
@@ -158,5 +158,44 @@ describe("The setStateCallback hook", async (): Promise<void> => {
     expect(warn.called).to.be.false;
     expect(callback.calledTwice).to.be.true;
     expect(callback.calledWith(15)).to.be.true;
+  });
+
+  it("Should only invoke state change callback for state changes after state setter is called with callback", async (): Promise<void> => {
+    const callback = sinon.spy();
+    const transform = sinon.fake(n => n + 7);
+    const warn = sinon.stub(console, "warn");
+    const wrapper = mount(<HookWrapper hookProvider={(): HookType<number> => useSetState(5, callback)} />);
+
+    let { hook } = wrapper.find(HookDiv).props() as HookDivProps<number>;
+    let [, setValue] = hook;
+
+    validateHook(hook, 5);
+    expect(warn.called).to.be.false;
+
+    setValue(transform);
+    await tickUpdate(wrapper);
+
+    ({ hook } = wrapper.find(HookDiv).props() as HookDivProps<number>);
+    [, setValue] = hook;
+
+    validateHook(hook, 12);
+    expect(warn.called).to.be.false;
+    expect(callback.calledOnce).to.be.true;
+    expect(callback.calledWith(12)).to.be.true;
+    expect(transform.calledOnce).to.be.true;
+    expect(transform.calledWith(5)).to.be.true;
+
+    setValue(transform);
+    await tickUpdate(wrapper);
+
+    ({ hook } = wrapper.find(HookDiv).props() as HookDivProps<number>);
+    [, setValue] = hook;
+
+    validateHook(hook, 19);
+    expect(warn.called).to.be.false;
+    expect(callback.calledTwice).to.be.true;
+    expect(callback.calledWith(19)).to.be.true;
+    expect(transform.calledTwice).to.be.true;
+    expect(transform.calledWith(12)).to.be.true;
   });
 });
