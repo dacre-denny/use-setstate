@@ -34,7 +34,7 @@ const [name, setName] = useSetState("", newName => {
 
 ## Usage
 
-The API is similar to Reacts [`useState()`](https://reactjs.org/docs/hooks-state.html) hook. When `useSetState()` is called, an array is returned where the first item of the array is the current state value, and the second item of the array is a setter for that state:
+The API is similar to Reacts [`useState()`](https://reactjs.org/docs/hooks-state.html) hook:
 
 ```jsx
 /*
@@ -45,7 +45,7 @@ let [value, setValue] = useSetState(initialValue?, callback?);
 
 ### State change callback
 
-The main difference between `useState()` and `useSetState()` is the optional `callback` argument. When a `callback` is passed, `useSetState()` will invoke that callback after state changes have been applied to the component, mimicking the behavior of Reacts `setState()` [callback](https://reactjs.org/docs/react-component.html#setstate) argument:
+The main difference between `useState()` and `useSetState()` is the optional `callback` argument. When a `callback` is provided, `useSetState()` will invoke that callback after state updates have been applied via the [state setter](#Setter-function), this mimicking the behavior of Reacts `setState()` [callback](https://reactjs.org/docs/react-component.html#setstate) argument:
 
 ```jsx
 let [isOpen, setIsOpen] = useSetState(false, () => {
@@ -53,7 +53,7 @@ let [isOpen, setIsOpen] = useSetState(false, () => {
 });
 ```
 
-When a state change callback is invoked, `useSetState()` will pass the updated state as the first argument:
+When a state change callback is invoked, `useSetState()` will pass the new state for that hook as the callbacks first argument:
 
 ```jsx
 let [, setMoney] = useSetState(0, money => {
@@ -75,13 +75,20 @@ setMood("happy");
 setMood("sad");
 ```
 
-State can also be updated by passing an updater to the setter function, this mimicking the behavior of updaters for Reacts [`setState()`](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous) method:
+State can also be updated by passing an updater to the setter function, this mimicking the behavior of updaters for Reacts [`setState()`](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous):
 
 ```jsx
-let [calculatedValue, setCalculatedValue] = useSetState(0);
+let [calculation, setCalculatedValue] = useSetState();
 
-// Updater function receives prior state value and updates state with returned value
-setCalculatedValue(value => ((value + 2) * 9) / 6);
+// Updater function can update state from a function call
+setCalculatedValue(Math.random);
+
+// Updater function can update state from function call that operates on current state
+setCalculatedValue(Math.sqrt);
+
+setCalculatedValue(Math.cos);
+
+setCalculatedValue(Math.round);
 ```
 
 ## Run tests

@@ -2,4 +2,4 @@
 /coverage
 /examples
 /test/helpers.js
-*.md
+README.md
