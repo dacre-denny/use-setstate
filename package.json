@@ -14,6 +14,23 @@
     "coverage": "nyc mocha -r ts-node/register -r test/helpers -b test/*.spec.*",
     "coveralls": "npm run coverage && cat coverage/lcov.info | coveralls"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run lint && npm run test"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dacre-denny/use-setstate.git"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "state",
+    "set state",
+    "callback"
+  ],
   "author": "Dacre Denny",
   "license": "MIT",
   "devDependencies": {
@@ -22,11 +39,15 @@
     "@types/mocha": "^5.2.7",
     "@types/react": "^16.9.2",
     "@types/sinon": "^7.0.13",
+    "@typescript-eslint/eslint-plugin": "^2.3.1",
+    "@typescript-eslint/parser": "^2.3.1",
     "chai": "^4.2.0",
     "coveralls": "^3.0.6",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "eslint": "^6.4.0",
+    "eslint-plugin-react": "^7.14.3",
+    "husky": "^3.0.5",
     "jsdom": "^15.1.1",
     "mocha": "^6.2.0",
     "react": "^16.9.0",
@@ -35,5 +56,7 @@
     "ts-node": "^8.3.0",
     "typescript": "^3.6.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "remark-cli": "^7.0.0"
+  }
 }

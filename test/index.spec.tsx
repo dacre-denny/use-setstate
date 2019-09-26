@@ -10,13 +10,15 @@ interface HookDivProps<T> {
   hook: HookType<T>;
 }
 
-const HookDiv = <T extends TypedValue>(_: HookDivProps<T>) => <div />;
+interface HookWrapperProps<T> {
+  hookProvider: TypedFunction<void, HookType<T>>;
+}
 
-const HookWrapper = <T extends TypedValue>(props: { hook: TypedFunction<void, HookType<T>> }) => (
-  <HookDiv hook={props.hook ? props.hook() : undefined} />
-);
+const HookDiv: React.SFC<HookDivProps<TypedValue>> = () => <div />;
 
-const validateHook = <T extends TypedValue>(hook: HookType<T>, initialValue: T) => {
+const HookWrapper: React.SFC<HookWrapperProps<TypedValue>> = props => <HookDiv hook={props.hookProvider ? props.hookProvider() : undefined} />;
+
+const validateHook = <T extends TypedValue>(hook: HookType<T>, initialValue: T): void => {
   expect(hook).to.be.a("array");
   expect(hook).to.have.lengthOf(2);
 
@@ -35,10 +37,10 @@ describe("The setStateCallback hook", async (): Promise<void> => {
 
   it("Should return valid hook if no initial value and no state change callback provided", async (): Promise<void> => {
     const warn = sinon.stub(console, "warn");
-    const wrapper = mount(<HookWrapper hook={(): HookType<number> => useSetState()} />);
+    const wrapper = mount(<HookWrapper hookProvider={(): HookType<number> => useSetState()} />);
 
     let { hook } = wrapper.find(HookDiv).props() as HookDivProps<number>;
-    let [, setValue] = hook;
+    const [, setValue] = hook;
 
     validateHook(hook, undefined);
     expect(warn.called).to.be.false;
@@ -53,10 +55,10 @@ describe("The setStateCallback hook", async (): Promise<void> => {
 
   it("Should return valid hook with state value matching initial state value provided", async (): Promise<void> => {
     const warn = sinon.stub(console, "warn");
-    const wrapper = mount(<HookWrapper hook={(): HookType<string> => useSetState("foo")} />);
+    const wrapper = mount(<HookWrapper hookProvider={(): HookType<string> => useSetState("foo")} />);
 
     let { hook } = wrapper.find(HookDiv).props() as HookDivProps<string>;
-    let [, setValue] = hook;
+    const [, setValue] = hook;
 
     validateHook(hook, "foo");
     expect(warn.called).to.be.false;
@@ -71,7 +73,7 @@ describe("The setStateCallback hook", async (): Promise<void> => {
 
   it("Should return valid hook with state value matching result of initial value callback", async (): Promise<void> => {
     const warn = sinon.stub(console, "warn");
-    const wrapper = mount(<HookWrapper hook={(): HookType<string> => useSetState(() => "bar")} />);
+    const wrapper = mount(<HookWrapper hookProvider={(): HookType<string> => useSetState(() => "bar")} />);
 
     let { hook } = wrapper.find(HookDiv).props() as HookDivProps<string>;
     const [, setValue] = hook;
@@ -90,16 +92,14 @@ describe("The setStateCallback hook", async (): Promise<void> => {
   it("Should log one warning if provided state change callback is not a function", async (): Promise<void> => {
     const callback = ("notFunction()" as unknown) as TypedFunction<number, void>;
     const warn = sinon.stub(console, "warn");
-    const wrapper = mount(<HookWrapper hook={(): HookType<undefined | number> => useSetState(undefined, callback)} />);
+    const wrapper = mount(<HookWrapper hookProvider={(): HookType<undefined | number> => useSetState(undefined, callback)} />);
 
     const { hook } = wrapper.find(HookDiv).props() as HookDivProps<number>;
     const [, setValue] = hook;
 
     validateHook(hook, undefined);
     expect(warn.called).to.be.true;
-    expect(
-      warn.calledWith(`useSetState: function type for callback argument expected. Found callback of type "string"`)
-    ).to.be.true;
+    expect(warn.calledWith(`useSetState: function type for callback argument expected. Found callback of type "string"`)).to.be.true;
 
     setValue(5);
     await tickUpdate(wrapper);
@@ -112,26 +112,22 @@ describe("The setStateCallback hook", async (): Promise<void> => {
     expect(warn.calledOnce).to.be.true;
   });
 
-  it("Should return valid hook if undefined initial value and state change callback provided", async (): Promise<
-    void
-  > => {
+  it("Should return valid hook if undefined initial value and state change callback provided", async (): Promise<void> => {
     const callback = sinon.spy();
     const warn = sinon.stub(console, "warn");
-    const wrapper = mount(<HookWrapper hook={(): HookType<number> => useSetState(undefined, callback)} />);
+    const wrapper = mount(<HookWrapper hookProvider={(): HookType<number> => useSetState(undefined, callback)} />);
 
-    let { hook } = wrapper.find(HookDiv).props() as HookDivProps<number>;
+    const { hook } = wrapper.find(HookDiv).props() as HookDivProps<number>;
 
     validateHook(hook, undefined);
     expect(warn.called).to.be.false;
     expect(callback.called).to.be.false;
   });
 
-  it("Should only invoke state change callback for state changes after state setter is called", async (): Promise<
-    void
-  > => {
+  it("Should only invoke state change callback for state changes after state setter is called", async (): Promise<void> => {
     const callback = sinon.spy();
     const warn = sinon.stub(console, "warn");
-    const wrapper = mount(<HookWrapper hook={(): HookType<number> => useSetState(5, callback)} />);
+    const wrapper = mount(<HookWrapper hookProvider={(): HookType<number> => useSetState(5, callback)} />);
 
     let { hook } = wrapper.find(HookDiv).props() as HookDivProps<number>;
     let [, setValue] = hook;
