@@ -27,12 +27,20 @@ export const useSetState = <T extends TypedValue>(initial?: FunctionOrValue<T>, 
     }
   }
 
+  const applyValue = (newValue: T): void => {
+    if (typeof value === "object" && typeof newValue === "object") {
+      setValue({ ...value, ...newValue });
+    } else {
+      setValue(newValue);
+    }
+  };
+
   const setState = (state: FunctionOrValue<T>): void => {
     if (isFunction(state)) {
       const transform = state as TypedFunction<T, T>;
-      setValue(transform(value));
+      applyValue(transform(value));
     } else {
-      setValue(state);
+      applyValue(state as T);
     }
   };
 

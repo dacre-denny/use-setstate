@@ -26,7 +26,7 @@ const validateHook = <T extends TypedValue>(hook: HookType<T>, initialValue: T):
 
   const [value, setValue] = hook;
 
-  expect(value).to.equal(initialValue);
+  expect(value).to.deep.equal(initialValue);
   expect(setValue).to.be.a("function");
 };
 
@@ -197,5 +197,84 @@ describe("The useSetState hook", async (): Promise<void> => {
     expect(callback.calledWith(19)).to.be.true;
     expect(transform.calledTwice).to.be.true;
     expect(transform.calledWith(12)).to.be.true;
+  });
+
+  describe("State merge behavior", (): void => {
+    it("Should replace non-object state when object type is subsequently set", async (): Promise<void> => {
+      const callback = sinon.spy();
+      const obj = { foo: "bar" };
+      const warn = sinon.stub(console, "warn");
+      const wrapper = mount(<HookWrapper hookProvider={(): HookType<TypedValue> => useSetState(5, callback)} />);
+
+      let { hook } = wrapper.find(HookDiv).props() as HookDivProps<TypedValue>;
+      let [, setValue] = hook;
+
+      validateHook(hook, 5);
+      expect(warn.called).to.be.false;
+
+      setValue(obj);
+      await tickUpdate(wrapper);
+
+      ({ hook } = wrapper.find(HookDiv).props() as HookDivProps<TypedValue>);
+      [, setValue] = hook;
+
+      validateHook(hook, obj);
+      expect(warn.called).to.be.false;
+      expect(callback.calledOnce).to.be.true;
+      expect(callback.calledWith(obj)).to.be.true;
+    });
+
+    it("Should replace object state when non-object type is subsequently set", async (): Promise<void> => {
+      const callback = sinon.spy();
+      const obj = { foo: "bar" };
+      const warn = sinon.stub(console, "warn");
+      const wrapper = mount(<HookWrapper hookProvider={(): HookType<TypedValue> => useSetState(obj, callback)} />);
+
+      let { hook } = wrapper.find(HookDiv).props() as HookDivProps<TypedValue>;
+      let [, setValue] = hook;
+
+      validateHook(hook, obj);
+      expect(warn.called).to.be.false;
+
+      setValue("foo");
+      await tickUpdate(wrapper);
+
+      ({ hook } = wrapper.find(HookDiv).props() as HookDivProps<TypedValue>);
+      [, setValue] = hook;
+
+      validateHook(hook, "foo");
+      expect(warn.called).to.be.false;
+      expect(callback.calledOnce).to.be.true;
+      expect(callback.calledWith("foo")).to.be.true;
+    });
+
+    it("Should merge existing object state with subsequently set object state (and overwrite colliding keys)", async (): Promise<void> => {
+      const callback = sinon.spy();
+      const obj = { foo: "bar", hello: 1, world: [] };
+      const warn = sinon.stub(console, "warn");
+      const wrapper = mount(<HookWrapper hookProvider={(): HookType<TypedValue> => useSetState(obj, callback)} />);
+
+      let { hook } = wrapper.find(HookDiv).props() as HookDivProps<TypedValue>;
+      let [, setValue] = hook;
+
+      validateHook(hook, obj);
+      expect(warn.called).to.be.false;
+
+      setValue({ hello: "goodbye" });
+      await tickUpdate(wrapper);
+
+      ({ hook } = wrapper.find(HookDiv).props() as HookDivProps<TypedValue>);
+      [, setValue] = hook;
+
+      validateHook(hook, {
+        foo: "bar",
+        hello: "goodbye",
+        world: []
+      });
+
+      expect(warn.called).to.be.false;
+      expect(callback.calledOnce).to.be.true;
+      //expect(callback.calledWith("foo")).to.be.true;
+    });
   });
 });
