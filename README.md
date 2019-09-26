@@ -20,7 +20,7 @@ npm install --save use-setstate
 ```jsx
 import { useSetState } from "use-setstate";
 
-const [name, setName] = useSetState("", newName => {
+const [name, setName] = useSetState("bob", newName => {
   console.log(`Hello ${newName}!`);
 });
 ```

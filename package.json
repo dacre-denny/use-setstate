@@ -1,6 +1,6 @@
 {
   "name": "use-setstate",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Reacts setState() method, reimagined as a hook",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
