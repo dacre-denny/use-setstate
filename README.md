@@ -20,25 +20,9 @@ npm install --save use-setstate
 ```jsx
 import { useSetState } from "use-setstate";
 
-/**
- * Name input component with reset button. Dispatches an event of document when name
- * value is updated.
- */
-function NameField(props) {
-  // Declare state variable following useState convention
-  const [name, setName] = useSetState("", value => {
-    // State change callback is invoked when name state changes
-    document.dispatchEvent(new CustomEvent("user_updated_name", { details: { value } }));
-  });
-
-  return (
-    <>
-      <label>Name</label>
-      <input value={name} onChange={event => setName(event.target.value)} />
-      <button onClick={event => setName("")}>Reset</button>
-    </>
-  );
-}
+const [name, setName] = useSetState("", newName => {
+  console.log(`${newName}, I see you...`);
+});
 ```
 
 ## Features
