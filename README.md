@@ -21,7 +21,7 @@ npm install --save use-setstate
 import { useSetState } from "use-setstate";
 
 const [name, setName] = useSetState("", newName => {
-  console.log(`${newName}, I see you...`);
+  console.log(`Hello ${newName}!`);
 });
 ```
 
