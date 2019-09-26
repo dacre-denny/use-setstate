@@ -186,7 +186,7 @@ describe("the hook module", async (): Promise<void> => {
       validateHook(hook, 5);
       expect(warn.called).to.be.false;
 
-      setValue(() => 10);
+      setValue((): number => 10);
       await tickUpdate(wrapper);
 
       ({ hook } = wrapper.find(HookDiv).props() as HookDivProps<number>);
@@ -197,7 +197,7 @@ describe("the hook module", async (): Promise<void> => {
       expect(callback.calledOnce).to.be.true;
       expect(callback.calledWith(10)).to.be.true;
 
-      setValue(() => 15);
+      setValue((): number => 15);
       await tickUpdate(wrapper);
 
       ({ hook } = wrapper.find(HookDiv).props() as HookDivProps<number>);
@@ -302,7 +302,7 @@ describe("the hook module", async (): Promise<void> => {
       validateHook(hook, obj);
       expect(warn.called).to.be.false;
 
-      setValue(() => ({ hello: "goodbye" }));
+      setValue((): object => ({ hello: "goodbye" }));
       await tickUpdate(wrapper);
 
       ({ hook } = wrapper.find(HookDiv).props() as HookDivProps<TypedValue>);
