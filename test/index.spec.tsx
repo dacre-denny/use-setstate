@@ -162,7 +162,7 @@ describe("The useSetState hook", async (): Promise<void> => {
 
   it("Should only invoke state change callback for state changes after state setter is called with callback", async (): Promise<void> => {
     const callback = sinon.spy();
-    const transform = sinon.fake(n => n + 7);
+    const transform = sinon.fake((n: number): number => n + 7);
     const warn = sinon.stub(console, "warn");
     const wrapper = mount(<HookWrapper hookProvider={(): HookType<number> => useSetState(5, callback)} />);
 
