@@ -54,9 +54,9 @@
     "react-dom": "^16.9.0",
     "sinon": "^7.4.2",
     "ts-node": "^8.3.0",
-    "typescript": "^3.6.3"
-  },
-  "dependencies": {
+    "typescript": "^3.6.3",
+    "nyc": "^14.1.1",
     "remark-cli": "^7.0.0"
-  }
+  },
+  "dependencies": {}
 }
