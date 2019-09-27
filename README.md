@@ -76,7 +76,7 @@ setMood("happy");
 setMood("sad");
 ```
 
-State can also be updated by passing an updater to the setter function, this mimicking the behavior of updaters for Reacts [`setState()`](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous):
+State can also be updated by passing an updater function to the state setter, this mimicking the behavior of updaters used with Reacts [`setState()`](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous) method:
 
 ```jsx
 let [calculation, setCalculatedValue] = useSetState();
